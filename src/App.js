@@ -24,9 +24,11 @@ const App=()=> {
 
   const handleClickEdit = (input)=> {
     setIsEditing(true)
-    const newTodos = [...todos]
-    newTodos=input.value
-    setEditTodoText(todos=>[...todos,{EditTodoText}])
+    const onChangeEditTodoText=(event)=>setEditTodoText(event.target.value) 
+
+    //const newTodos = [...todos]
+    //newTodos=input.value
+    //setEditTodoText(todos=>[...todos,{EditTodoText}])
     
 
     // todos ステートを更新
@@ -44,7 +46,7 @@ const App=()=> {
       <ul>
         {todos.map((todo,index)=>(
           <li key={index}>
-            {isEditing? <input value={todo.TodoText} onChange={onChangeEditTodoText}/>:todo.TodoText}
+            {isEditing? <input value={this.todo.TodoText} onChange={(e) => this.setState({text: e.target.value})}/>:todo.TodoText}
             
             <button onClick={handleClickEdit}>編集</button>
             <button onClick={handleRemoveTask}>削除</button>
