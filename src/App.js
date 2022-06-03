@@ -16,23 +16,23 @@ const App=()=> {
     setTodoText('')
   }
 　
-  const handleRemoveTask = index => {
+  const handleRemoveTask = id => {
     const newTodos = [...todos]
-    newTodos.splice(index,1)
+    newTodos.splice(id,1)
     setTodos(newTodos)
 　}
 
-  const handleClickEdit = (input)=> {
+  const handleClickEdit = (value,id)=> {
     setIsEditing(true)
-    const onChangeEditTodoText=(event)=>setEditTodoText(event.target.value) 
-
-    //const newTodos = [...todos]
-    //newTodos=input.value
-    //setEditTodoText(todos=>[...todos,{EditTodoText}])
-    
+    const newTodos = todos.map((todo) => {
+      if (todos.id === id) {
+        todo.value = value;
+      }
+      return todo;
+    });
 
     // todos ステートを更新
-    //setTodos(newTodos);
+    setTodos(newTodos);
   };
 
   return (
@@ -45,8 +45,8 @@ const App=()=> {
 
       <ul>
         {todos.map((todo,index)=>(
-          <li key={index}>
-            {isEditing? <input value={this.todo.TodoText} onChange={(e) => this.setState({text: e.target.value})}/>:todo.TodoText}
+          <li key={todo.id}>
+            {isEditing? <input value={todo.TodoText} onChange={(e) => e.preventDefault()}/>:todo.TodoText}
             
             <button onClick={handleClickEdit}>編集</button>
             <button onClick={handleRemoveTask}>削除</button>
