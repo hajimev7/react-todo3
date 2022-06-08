@@ -5,10 +5,10 @@ import './App.css';
 const App=()=> {
   const [todos, setTodos] = useState([]);
   const [TodoText, setTodoText] = useState('')
-  const [EditTodoText, setEditTodoText] = useState('')
+  const [todoEdit, setTodoEdit] = useState('');
   const [isEditing,setIsEditing]= useState(false)
+  const [incompletedTodos, setIncompletedTodos] = useState([]);
   const onChangeTodoText=(event)=>setTodoText(event.target.value)
-  const onChangeEditTodoText=(event)=>setEditTodoText(event.target.value) 
 
   const onClickAdd=()=>{
     if(TodoText === '') return
@@ -16,24 +16,27 @@ const App=()=> {
     setTodoText('')
   }
 　
-  const handleRemoveTask = id => {
+  const handleRemoveTask = index => {
     const newTodos = [...todos]
-    newTodos.splice(id,1)
+    newTodos.splice(index,1)
     setTodos(newTodos)
 　}
 
-  const handleClickEdit = (value,id)=> {
+  const onChangeTodoEdit = (e) => {
     setIsEditing(true)
-    const newTodos = todos.map((todo) => {
-      if (todos.id === id) {
-        todo.value = value;
-      }
-      return todo;
-    });
-
-    // todos ステートを更新
-    setTodos(newTodos);
+    setTodoEdit(e.target.value);
   };
+  const onClickIncompleteTodoEdit = (index) => {
+    if(todoEdit === '') {
+      return false;
+    };
+    const newTodos = [...incompletedTodos, todoEdit];
+    newTodos.splice(index, 1);
+    setIncompletedTodos(newTodos);
+    setTodoEdit('');
+  };
+
+  
 
   return (
     <> 
@@ -42,17 +45,19 @@ const App=()=> {
         <input placeholder='todoを入力' value={TodoText} onChange={onChangeTodoText}/>
         <button onClick={onClickAdd}>追加</button>
       </div>
-
-      <ul>
-        {todos.map((todo,index)=>(
-          <li key={todo.id}>
-            {isEditing? <input value={todo.TodoText} onChange={(e) => e.preventDefault()}/>:todo.TodoText}
+      
+      <form>
+        <ul>
+          {todos.map((todo,index)=>(
+            <li key={index}>
+              {isEditing? <input value={todo.TodoText}/>:todo.TodoText}
             
-            <button onClick={handleClickEdit}>編集</button>
-            <button onClick={handleRemoveTask}>削除</button>
-          </li>
-        ))}
-      </ul>
+              <button onClick={onChangeTodoEdit}>編集</button>
+              <button onClick={handleRemoveTask}>削除</button>
+            </li>
+          ))}
+        </ul>
+      </form>
     </>
   );
 }
