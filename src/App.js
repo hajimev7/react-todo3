@@ -5,14 +5,14 @@ import './App.css';
 const App=()=> {
   const [todos, setTodos] = useState([]);
   const [TodoText, setTodoText] = useState('')
-  const [todoEdit, setTodoEdit] = useState('');
-  const [isEditing,setIsEditing]= useState(false)
-  const [incompletedTodos, setIncompletedTodos] = useState([]);
+  const [EditTodoText, setEditTodoText] = useState("")
+  //const [isEditing,setIsEditing]= useState(false)
   const onChangeTodoText=(event)=>setTodoText(event.target.value)
+  const onChangeEditTodoText=(event)=>setEditTodoText(event.target.value) 
 
   const onClickAdd=()=>{
     if(TodoText === '') return
-    setTodos(todos => [...todos,{TodoText}])
+    setTodos(todos => [...todos,{id:todos.length+1, text:TodoText,isEditing:false}])
     setTodoText('')
   }
 　
@@ -21,22 +21,35 @@ const App=()=> {
     newTodos.splice(index,1)
     setTodos(newTodos)
 　}
-
-  const onChangeTodoEdit = (e) => {
-    setIsEditing(true)
-    setTodoEdit(e.target.value);
-  };
-  const onClickIncompleteTodoEdit = (index) => {
-    if(todoEdit === '') {
-      return false;
-    };
-    const newTodos = [...incompletedTodos, todoEdit];
-    newTodos.splice(index, 1);
-    setIncompletedTodos(newTodos);
-    setTodoEdit('');
-  };
-
   
+ 
+
+  const handleClickEdit = (id)=> {
+    const deepCopy = todos.map((todo) => ({ ...todo }));
+    
+    const newTodos = deepCopy.map((todo) => {
+      if (todo.id===id){
+        todo.isEditing = true
+      }
+      return todo
+    })  
+    setTodos(newTodos)
+  }
+  
+  const handleSubmit =(id)=>{
+    const deepCopy = todos.map((todo) => ({ ...todo }));
+    
+    const newTodos = deepCopy.map((todo) => {
+      if (todo.id===id){
+        todo.text = EditTodoText;
+        todo.isEditing = false
+      }
+      return todo
+    })  
+    console.log('=== Original todos ===');
+    todos.map((todo) => console.log(`id: ${todo.id}, value: ${todo.text}`));
+    setTodos(newTodos)
+  }
 
   return (
     <> 
@@ -45,19 +58,21 @@ const App=()=> {
         <input placeholder='todoを入力' value={TodoText} onChange={onChangeTodoText}/>
         <button onClick={onClickAdd}>追加</button>
       </div>
-      
-      <form>
-        <ul>
-          {todos.map((todo,index)=>(
-            <li key={index}>
-              {isEditing? <input value={todo.TodoText}/>:todo.TodoText}
-            
-              <button onClick={onChangeTodoEdit}>編集</button>
-              <button onClick={handleRemoveTask}>削除</button>
-            </li>
-          ))}
-        </ul>
-      </form>
+
+      <ul>
+        {todos.map((todo)=>(
+          <li key={todo.id}>
+            {todo.isEditing? (
+            <>
+            <input type="text" index={todo.id} value={todo.te} onChange={onChangeEditTodoText}/>
+            <button onClick={()=>handleSubmit(todo.id,todo.text)}>更新</button>
+            </>
+            ):(todo.text)}
+            <button onClick={()=>handleClickEdit(todo.id,todo.text)}>編集</button>
+            <button onClick={handleRemoveTask}>削除</button>
+          </li>
+        ))}
+      </ul>
     </>
   );
 }
