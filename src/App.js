@@ -64,7 +64,7 @@ const App=()=> {
           <li key={todo.id}>
             {todo.isEditing? (
             <>
-            <input type="text" index={todo.id} value={todo.te} onChange={onChangeEditTodoText}/>
+            <input type="text" index={todo.id} value={todo.text} onChange={onChangeEditTodoText}/>
             <button onClick={()=>handleSubmit(todo.id,todo.text)}>更新</button>
             </>
             ):(todo.text)}
